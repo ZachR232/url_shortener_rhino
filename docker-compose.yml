@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_HOST=redis
+      - POSTGRES_HOST=postgres
+      - POSTGRES_DB=rhinodb
+      - POSTGRES_USER=rhinouser
+      - POSTGRES_PASSWORD=rhinopass
+    depends_on:
+      - postgres
+      - redis
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=rhinodb
+      - POSTGRES_USER=rhinouser
+      - POSTGRES_PASSWORD=rhinopass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
